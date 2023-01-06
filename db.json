@@ -69,8 +69,14 @@
     {
       "content": "ewcasda sd as",
       "date": "2023-01-06T15:49:18.784Z",
-      "important": false,
+      "important": true,
       "id": 12
+    },
+    {
+      "content": "ewew",
+      "date": "2023-01-06T18:10:34.333Z",
+      "important": false,
+      "id": 13
     }
   ]
 }
