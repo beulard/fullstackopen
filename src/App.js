@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const SearchFilter = ({ searchValue, setSearchValue }) =>
   <div>
     search for name: <input value={searchValue} onChange={(event) => setSearchValue(event.target.value)} />
   </div>
 
-const Persons = ({ persons }) =>
-  <li>
+const Persons = ({ persons, handleDeletePerson }) =>
+  <ul>
     {
-      persons.map(p => <ul key={p.name}>{p.name} {p.number}</ul>)
+      persons.map(p => <li key={p.id}>{p.name} {p.number} <button onClick={() => handleDeletePerson(p.id, p.name)}>delete</button></li>)
     }
-  </li>
+  </ul>
 
 const PersonForm = ({ newName, setNewName, newNumber, setNewNumber, addName }) =>
   <form>
@@ -31,25 +31,45 @@ const App = () => {
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(allPersons => {
+        setPersons(allPersons)
       })
   }, [])
 
   const addName = (event) => {
     event.preventDefault()
-    if (persons.find(p => p.name === newName)) {
-      alert(`Can't add the same person (${newName}) twice!`)
+    // Handle case where the same person is added twice
+    const duplicatePerson = persons.find(p => p.name === newName)
+    if (duplicatePerson) {
+      if (window.confirm(`Replace ${newName}'s number with ${newNumber}?`)) {
+        personService
+          .updatePerson(duplicatePerson.id, { ...duplicatePerson, number: newNumber })
+          .then(returnedPerson => setPersons(persons.map(p => p.id === returnedPerson.id ? returnedPerson : p)))
+      }
       return
     }
-    setPersons([...persons, { name: newName, number: newNumber }])
+    const newPerson = { name: newName, number: newNumber }
+    personService
+      .addPerson(newPerson)
+      .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
+
     setNewName('')
     setNewNumber('')
   }
 
-  const personsToShow = (searchValue === '') ? persons : persons.filter(p => p.name.toLowerCase().search(searchValue) !== -1)
+  const handleDeletePerson = (id, name) => {
+    if (!window.confirm(`Delete ${name} from address book?`))
+      return
+    personService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id))
+      })
+  }
+
+  const personsToShow = (searchValue === '') ? persons : persons.filter(p => p.name.toLowerCase().search(searchValue.toLowerCase()) !== -1)
 
   return (
     <div>
@@ -63,7 +83,7 @@ const App = () => {
         addName={addName}
       />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDeletePerson={handleDeletePerson} />
       
     </div>
   )
