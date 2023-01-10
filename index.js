@@ -1,7 +1,10 @@
 const express = require('express')
+const cors = require('cors')
+
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 let notes = [{ id: 1, content: "HTML is not easy", date: "2022-05-30T17:30:31.098Z", important: true }, { id: 2, content: "Browser can execute only Javascript", date: "2022-05-30T18:39:34.091Z", important: false }, { id: 3, content: "GET and POST are the most important methods of HTTP protocol", date: "2022-05-30T19:20:14.298Z", important: true }]
 
@@ -52,6 +55,31 @@ app.post('/api/notes', (request, response) => {
     
     notes = notes.concat(note)
 
+    response.json(note)
+})
+
+app.put('/api/notes/:id', (request, response) => {
+    const body = request.body
+    
+    if (!body.content || body.important === null) {
+        return response.status(400).json({
+            error: 'content or important missing'
+        })
+    }
+
+    const id = Number(request.params.id)
+
+    const oldNote = notes.find(n => n.id === id)
+    // Update content and important but keep date and id
+    const note = {
+        id: oldNote.id,
+        date: oldNote.date,
+        content: body.content,
+        important: body.important
+    }
+
+    notes = notes.map(n => n.id === id ? note : n)
+    
     response.json(note)
 })
 
