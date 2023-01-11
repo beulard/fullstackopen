@@ -51,7 +51,7 @@ app.get('/api/persons/:id', (req, resp, next) => {
             resp.status(404).end()
         }
     })
-    .catch(err => { next(err) })
+        .catch(err => next(err))
 })
 
 app.delete('/api/persons/:id', (req, resp, next) => {
@@ -59,33 +59,33 @@ app.delete('/api/persons/:id', (req, resp, next) => {
         .then(() => {
             resp.status(204).end()
         })
-        .catch(err => { next(err) })
+        .catch(err => next(err))
 })
 
-app.post('/api/persons', (req, resp) => {
-    const body = req.body
-    if (!body.name || !body.number) {
-        return resp.status(400).json({
-            error: 'missing name or number'
+app.post('/api/persons', (req, resp, next) => {
+    const person = new Person(req.body)
+
+    Person.find({ name: person.name })
+        .then(duplicates => {
+            if (duplicates.length > 0) {
+                resp.status(400).json({ error: 'Overwriting with POST is forbidden' })
+            } else {
+                person.save().then(returnedPerson => {
+                    resp.json(returnedPerson)
+                })
+                    .catch(err => next(err))
+            }
         })
-    }
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
-    person.save().then(returnedPerson => {
-        resp.json(returnedPerson)
-    })
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
     console.log('in PUT')
     const person = req.body
-    Person.findByIdAndUpdate(req.params.id, person, {new: true})
+    Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
         .then(updatedPerson => {
             res.json(updatedPerson)
         })
-        .catch(err => { next(err) })
+        .catch(err => next(err))
 })
 
 const unknownEndpoint = (request, response, next) => {
@@ -98,6 +98,8 @@ const errorHandler = (error, request, response, next) => {
     console.log(error)
     if (error.name === 'CastError') {
         response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        response.status(400).send({ error: error.message })
     }
 
     next(error)
