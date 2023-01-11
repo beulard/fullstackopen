@@ -27,30 +27,6 @@ logger = morgan((tokens, req, res) => {
 
 app.use(logger)
 
-// Data
-persons = [
-    {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-]
-
 app.get('/', (req, resp) => {
     resp.send('Hello world')
 })
@@ -67,19 +43,23 @@ app.get('/api/persons', (req, resp) => {
     })
 })
 
-app.get('/api/persons/:id', (req, resp) => {
+app.get('/api/persons/:id', (req, resp, next) => {
     Person.findById(req.params.id).then(person => {
-        resp.json(person)
+        if (person) {
+            resp.json(person)
+        } else {
+            resp.status(404).end()
+        }
     })
-    .catch(err => {
-        resp.status(404).send(err.message)
-    })
+    .catch(err => { next(err) })
 })
 
-app.delete('/api/persons/:id', (req, resp) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(p => p.id !== id)
-    resp.status(204).end()
+app.delete('/api/persons/:id', (req, resp, next) => {
+    Person.findByIdAndRemove(req.params.id)
+        .then(() => {
+            resp.status(204).end()
+        })
+        .catch(err => { next(err) })
 })
 
 app.post('/api/persons', (req, resp) => {
@@ -89,12 +69,6 @@ app.post('/api/persons', (req, resp) => {
             error: 'missing name or number'
         })
     }
-    if (persons.find(p => p.name === body.name)) {
-        return resp.status(400).json({
-            error: 'person with same name already in phonebook'
-        })
-    }
-
     const person = new Person({
         name: body.name,
         number: body.number
@@ -104,11 +78,32 @@ app.post('/api/persons', (req, resp) => {
     })
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+    console.log('in PUT')
+    const person = req.body
+    Person.findByIdAndUpdate(req.params.id, person, {new: true})
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        })
+        .catch(err => { next(err) })
+})
+
 const unknownEndpoint = (request, response, next) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.log(error)
+    if (error.name === 'CastError') {
+        response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || "3001"
 

@@ -1,1 +1,1 @@
-DELETE https://fullstackopen-phonebook-backend.fly.dev/api/persons/3
+DELETE http://localhost:3001/api/persons/63be942ae16b9e3ef9925103
