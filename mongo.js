@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const logger = require('./utils/logger')
 
 if (process.argv.length < 3) {
-    console.log('Please provide the password as an argument: node mongo.js <password>')
+    logger.error('Please provide the password as an argument: node mongo.js <password>')
     process.exit(1)
 }
 
@@ -28,4 +29,4 @@ mongoose
             mongoose.connection.close()
         })
     })
-    .catch((err) => console.log(err))
+    .catch((err) => logger.error(err))
