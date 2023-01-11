@@ -100,6 +100,10 @@ const App = () => {
         setStatusMessageColor('green')
         resetAndStartTimer()
       })
+      .catch(error => {
+        setStatusMessage(error.response.data.error)
+        setStatusMessageColor('red')
+      })
 
     setNewName('')
     setNewNumber('')
