@@ -4,9 +4,9 @@
   "description": "Learning webdev using the great University of Helsinki  [Full Stack open course](https://fullstackopen.com/).",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest --verbose",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "rm -rf build && cd ../fullstackopen-frontend && npm run build && cp -r build ../fullstackopen",
     "deploy": "~/.fly/bin/flyctl deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
