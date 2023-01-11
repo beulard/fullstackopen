@@ -1,7 +1,7 @@
-POST https://fullstackopen-phonebook-backend.fly.dev/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "FPC",
-    "number": "12312313"
+    "name": "Matthias Dub",
+    "number": "0303969420"
 }

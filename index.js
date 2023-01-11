@@ -1,7 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-
 app = express()
+const Person = require('./models/person')
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -55,21 +56,24 @@ app.get('/', (req, resp) => {
 })
 
 app.get('/info', (req, resp) => {
-    resp.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
+    Person.count({}).then(count => {
+        resp.send(`<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`)
+    })
 })
 
 app.get('/api/persons', (req, resp) => {
-    resp.json(persons)
+    Person.find({}).then(persons => {
+        resp.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (req, resp) => {
-    const id = Number(req.params.id)
-    const person = persons.find(p => p.id === id)
-    if (!person) {
-        resp.status(404).end()
-    } else {
-        resp.json(persons.find(p => p.id === id))
-    }
+    Person.findById(req.params.id).then(person => {
+        resp.json(person)
+    })
+    .catch(err => {
+        resp.status(404).send(err.message)
+    })
 })
 
 app.delete('/api/persons/:id', (req, resp) => {
@@ -91,15 +95,13 @@ app.post('/api/persons', (req, resp) => {
         })
     }
 
-    const person = {
-        id: Math.floor((Math.random() * 32000)),
+    const person = new Person({
         name: body.name,
-        number: body.number,
-    }
-    persons = persons.concat(person)
-
-    resp.json(person)
-
+        number: body.number
+    })
+    person.save().then(returnedPerson => {
+        resp.json(returnedPerson)
+    })
 })
 
 const unknownEndpoint = (request, response, next) => {

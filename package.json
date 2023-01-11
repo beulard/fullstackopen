@@ -4,6 +4,7 @@
   "description": "Learning webdev using the great University of Helsinki  [Full Stack open course](https://fullstackopen.com/).",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.8.3",
     "morgan": "^1.10.0"
