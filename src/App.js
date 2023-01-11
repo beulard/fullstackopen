@@ -82,11 +82,18 @@ const App = () => {
             resetAndStartTimer()
           })
           .catch(error => {
-            setStatusMessage(`Couldn't change ${newName}'s number: person has been removed from database`)
-            setStatusMessageColor('red')
-            // Remove person from list
-            setPersons(persons.filter(p => p.id !== duplicatePerson.id))
-            resetAndStartTimer()
+            if (error.code === "ERR_BAD_REQUEST") {
+              // Probably a validation error
+              setStatusMessage(error.response.data.error)
+              resetAndStartTimer()
+            } else {
+              // Mismatch between app and database
+              setStatusMessage(`Couldn't change ${newName}'s number: person has been removed from database`)
+              setStatusMessageColor('red')
+              // Remove person from list
+              setPersons(persons.filter(p => p.id !== duplicatePerson.id))
+              resetAndStartTimer()
+            }
           })
       }
       return
