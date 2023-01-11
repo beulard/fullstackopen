@@ -12,7 +12,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/beulard/fullstackopen#readme",
   "devDependencies": {
+    "eslint": "^8.31.0",
     "nodemon": "^2.0.20"
   }
 }

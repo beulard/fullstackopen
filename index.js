@@ -1,20 +1,20 @@
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-app = express()
+const app = express()
 const Person = require('./models/person')
 
 app.use(express.static('build'))
 app.use(express.json())
 
-morgan.token('post-data', (request, response) => {
-    if (request.method == 'POST') {
+morgan.token('post-data', (request) => {
+    if (request.method === 'POST') {
         return JSON.stringify(request.body)
     } else {
         return null
     }
 })
-logger = morgan((tokens, req, res) => {
+const logger = morgan((tokens, req, res) => {
     return [
         tokens.method(req, res),
         tokens.url(req, res),
@@ -88,7 +88,7 @@ app.put('/api/persons/:id', (req, res, next) => {
         .catch(err => next(err))
 })
 
-const unknownEndpoint = (request, response, next) => {
+const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
@@ -107,7 +107,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT || "3001"
+const PORT = process.env.PORT || '3001'
 
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`)

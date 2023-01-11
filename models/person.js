@@ -11,14 +11,14 @@ mongoose.connect(process.env.MONGODB_URI_PHONEBOOK)
 const personSchema = new mongoose.Schema({
     name: {
         type: String,
-        minLength: [3, "Below minimum length of 3"],
+        minLength: [3, 'Below minimum length of 3'],
         required: true
     },
     number: {
         type: String,
-        minLength: [8, "Below minimum length of 8"],
+        minLength: [8, 'Below minimum length of 8'],
         validate: {
-            validator: function(v) {
+            validator: function (v) {
                 return /^\d{2,3}-\d+$/.test(v)
             },
             message: props => `${props.value} is not a valid phone number!`
@@ -29,10 +29,10 @@ const personSchema = new mongoose.Schema({
 
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-      returnedObject.id = returnedObject._id.toString()
-      delete returnedObject._id
-      delete returnedObject.__v
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
     }
-  })
+})
 
 module.exports = mongoose.model('Person', personSchema)
