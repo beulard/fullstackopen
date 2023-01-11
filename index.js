@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const { update } = require('./models/note')
 const app = express()
 const Note = require('./models/note')
 
@@ -16,20 +17,24 @@ app.get('/api/notes', (request, response) => {
     })
 })
 
-app.get('/api/notes/:id', (request, response) => {
-    Note.findById(request.params.id).then(note => {
-        response.json(note)
-    })
-    .catch(err => {
-        response.status(404).send(err.message)
-    })
+app.get('/api/notes/:id', (request, response, next) => {
+    Note.findById(request.params.id)
+        .then(note => {
+            if (note) {
+                response.json(note)
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => { next(error) })
 })
 
-app.delete('/api/notes/:id', (request, response) => {
-    Note.findByIdAndDelete(request.params.id)
+app.delete('/api/notes/:id', (request, response, next) => {
+    Note.findByIdAndRemove(request.params.id)
         .then(() => {
             response.status(204).end()
         })
+        .catch(error => next(error))
 })
 
 app.post('/api/notes', (request, response) => {
@@ -51,30 +56,39 @@ app.post('/api/notes', (request, response) => {
     })
 })
 
-app.put('/api/notes/:id', (request, response) => {
+app.put('/api/notes/:id', (request, response, next) => {
     const body = request.body
 
-    if (!body.content || body.important === null) {
-        return response.status(400).json({
-            error: 'content or important missing'
-        })
-    }
-
-    const id = Number(request.params.id)
-
-    const oldNote = notes.find(n => n.id === id)
-    // Update content and important but keep date and id
     const note = {
-        id: oldNote.id,
-        date: oldNote.date,
         content: body.content,
         important: body.important
     }
 
-    notes = notes.map(n => n.id === id ? note : n)
+    Note.findByIdAndUpdate(request.params.id, note, {new: true})
+        .then(updatedNote => {
+            response.json(updatedNote)
+        })
+        .catch(error => next(error))
 
-    response.json(note)
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
