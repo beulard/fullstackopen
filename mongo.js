@@ -28,20 +28,4 @@ mongoose
             mongoose.connection.close()
         })
     })
-    // .then((result) => {
-    //     console.log('connected')
-
-    //     const note = new Note({
-    //         content: 'HTML is Easy',
-    //         date: new Date(),
-    //         important: true,
-    //     })
-
-    //     return note.save()
-    // })
-    // .then((result) => {
-    //     console.log('note saved!')
-    //     console.log(result)
-    //     return mongoose.connection.close()
-    // })
     .catch((err) => console.log(err))

@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const { update } = require('./models/note')
 const app = express()
 const Note = require('./models/note')
 
@@ -38,11 +37,11 @@ app.delete('/api/notes/:id', (request, response, next) => {
 })
 
 app.post('/api/notes', (request, response, next) => {
-    const body = request.body
+    const { content, important } = request.body
 
     const note = new Note({
-        content: request.body.content,
-        important: request.body.important || false,
+        content: content,
+        important: important || false,
         date: new Date()
     })
 
