@@ -40,7 +40,7 @@ describe('blog list', () => {
         // Now make a GET request to check things
         const blogs = await api.get('/api/blogs')
         expect(blogs.body).toHaveLength(helper.listWithManyBlogs.length + 1)
-        expect(blogs.body[blogs.body.length-1].content).toBe(newBlog.content)
+        expect(blogs.body[blogs.body.length - 1].content).toBe(newBlog.content)
     })
     test('if likes property is missing, it defaults to zero', async () => {
         const newBlog = {
@@ -60,13 +60,40 @@ describe('blog list', () => {
             likes: 999
         }
         await api.post('/api/blogs').send(blogWithoutTitle).expect(400)
-        
+
         const blogWithoutUrl = {
             title: 'A recently created blog entry',
             author: 'Matthias Dubouchet',
             likes: 999
         }
         await api.post('/api/blogs').send(blogWithoutUrl).expect(400)
+    })
+})
+
+describe('DELETE on a blog entry', () => {
+    test('removes the entry and returns status 204 if id is found', async () => {
+        const blogsBefore = await api.get('/api/blogs')
+        const firstEntry = blogsBefore.body[0]
+        await api.delete(`/api/blogs/${firstEntry.id}`).expect(204)
+
+        // GET the remaining entries and check that the one we DELETEd is gone
+        const blogsAfter = await api.get('/api/blogs')
+        expect(blogsAfter.body).not.toContain(firstEntry)
+    })
+})
+
+describe('PUT on a blog entry', () => {
+    test('updates the entry with the correct information', async () => {
+        const blogsBefore = await api.get('/api/blogs')
+        const initialEntry = blogsBefore.body[0]
+        const replacementEntry = {
+            author: 'Modified Author',
+            title: 'Modified Title',
+            likes: initialEntry.likes + 1,
+            url: 'http://google.com'
+        }
+        const returnedEntry = await api.put(`/api/blogs/${initialEntry.id}`).send(replacementEntry).expect(200)
+        expect(returnedEntry.body).toEqual({ ...replacementEntry, id: initialEntry.id })
     })
 })
 
