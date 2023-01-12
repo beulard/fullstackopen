@@ -3,5 +3,6 @@ Content-Type: application/json
 
 {
     "important":  true,
-    "content": "caca"
+    "content": "The content is here 5",
+    "userId": "63c059ea403df34e225707f6"
 }
