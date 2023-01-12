@@ -1,5 +1,3 @@
-const { default: test } = require('node:test')
-
 const average = require('../utils/for_testing').average
 
 describe('average', () => {
