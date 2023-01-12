@@ -3,18 +3,40 @@ const supertest = require('supertest')
 const app = require('../app')
 const config = require('../utils/config')
 const Note = require('../models/note')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
 
-beforeEach(async () => {
-    await Note.deleteMany({})
-    await Note.insertMany(helper.initialNotes)
-})
+let rootUser = {
+    username: 'root',
+    name: 'Superuser',
+    password: 'password'
+}
+
 
 beforeAll(async () => {
     await mongoose.disconnect()
     await mongoose.connect(config.MONGODB_URI)
+    // Create and authenticate a user
+    await User.deleteMany({})
+    // Create root user in DB
+    const root = await api.post('/api/users').send(rootUser).expect(201)
+
+    rootUser.id = root.body.id // needed?
+
+    const auth = await api
+        .post('/api/login')
+        .send({ username: rootUser.username, password: rootUser.password })
+        .expect(200)
+    console.log(auth.body)
+    rootUser.token = auth.body.token
+})
+
+
+beforeEach(async () => {
+    await Note.deleteMany({})
+    await Note.insertMany(helper.initialNotes)
 })
 
 describe('when there is initially some notes saved', () => {
@@ -77,10 +99,12 @@ describe('addition of a new note', () => {
         const newNote = {
             content: 'async/await simplifies making async calls',
             important: true,
+            userId: rootUser.id
         }
 
         await api
             .post('/api/notes')
+            .set({ 'Authorization': `bearer ${rootUser.token}` })
             .send(newNote)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -101,6 +125,7 @@ describe('addition of a new note', () => {
 
         await api
             .post('/api/notes')
+            .set({ 'Authorization': `bearer ${rootUser.token}` })
             .send(newNote)
             .expect(400)
 
