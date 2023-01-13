@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJldWxhcmQiLCJuYW1lIjoiTWF0dGhpYXMiLCJpYXQiOjE2NzM2MTMyMzksImV4cCI6MTY3MzYxNjgzOX0.cmdi6s16KmnppblekDIQjW56D5QZLDZU2oQKyNyAM6A
 
 {
-  "title": "My favourite blog post 12",
-  "author": "Richard Feynman",
+  "title": "My favourite blog post 13",
+  "author": "Authenticated Richard Feynman",
   "url": "http://feynman.org/blog-2",
   "likes": 145
 }
