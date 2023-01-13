@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "My favourite blog post 4",
+  "title": "My favourite blog post 12",
   "author": "Richard Feynman",
   "url": "http://feynman.org/blog-2",
   "likes": 145

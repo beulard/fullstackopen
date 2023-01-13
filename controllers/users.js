@@ -5,6 +5,14 @@ const bcrypt = require('bcrypt')
 usersRouter.post('/', async (req, res) => {
     const body = req.body
 
+    // Check that password was provided
+    // and has sufficient length
+    if (!body.password || body.password.length < 3) {
+        return res.status(400).json({
+            error: 'password too short'
+        })
+    }
+
     const duplicate = await User.findOne({ username: body.username })
     if (duplicate) {
         return res.status(400).json({
@@ -22,6 +30,11 @@ usersRouter.post('/', async (req, res) => {
     })
     const returnedUser = await user.save()
     res.status(201).json(returnedUser)
+})
+
+usersRouter.get('/', async (req, res) => {
+    const users = await User.find({}).populate('blogs')
+    res.status(200).json(users)
 })
 
 module.exports = usersRouter
