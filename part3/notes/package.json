@@ -1,0 +1,36 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Learning webdev using the great University of Helsinki  [Full Stack open course](https://fullstackopen.com/).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../fullstackopen-frontend && npm run build && cp -r build ../fullstackopen",
+    "deploy": "~/.fly/bin/flyctl deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "~/.fly/bin/flyctl logs",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beulard/fullstackopen.git"
+  },
+  "author": "beulard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beulard/fullstackopen/issues"
+  },
+  "homepage": "https://github.com/beulard/fullstackopen#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "nodemon": "^2.0.20"
+  }
+}
