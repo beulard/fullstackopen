@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user')
@@ -12,13 +10,13 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const blog = new Blog(request.body)
 
-    const token = request.token
+    const user = request.user
+    if (!user) {
+        return response.status(401).json({
+            error: 'not authorized'
+        })
+    }
 
-    const identity = jwt.verify(token, process.env.SECRET)
-
-    const user = await User.findOne({
-        username: identity.username
-    })
     // Associate with authenticated user
     blog.user = user.id
 
@@ -33,19 +31,29 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
-    const token = req.token
+    const user = req.user
+    if (!user) {
+        return res.status(401).json({
+            error: 'not authorized'
+        })
+    }
 
-    const identity = jwt.verify(token, process.env.SECRET)
-    
-    const user = await User.findOne({
-        username: identity.username
-    })
     // Check that requesting user is the same as
     // user who created the entry
     const blog = await Blog.findById(req.params.id)
+    if (!blog) {
+        return res.status(400).json({
+            error: 'blog entry does not exist'
+        })
+    }
 
     if (blog.user.toString() === user.id.toString()) {
-        await Blog.findByIdAndRemove(req.params.id)
+        await blog.remove()
+        // Also remove the blog from the user's blog list
+        user.blogs = user.blogs.filter(
+            b => b._id.toString() !== req.params.id.toString()
+        )
+        await user.save()
     } else {
         return res.status(401).json({
             error: 'authenticated user did not create this blog entry'
