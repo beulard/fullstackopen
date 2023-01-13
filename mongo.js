@@ -1,0 +1,32 @@
+const mongoose = require('mongoose')
+const logger = require('./utils/logger')
+
+if (process.argv.length < 3) {
+    logger.error('Please provide the password as an argument: node mongo.js <password>')
+    process.exit(1)
+}
+
+const password = process.argv[2]
+
+const url = `mongodb+srv://beulard:${password}@cluster0.ipdmcx2.mongodb.net/noteApp?retryWrites=true&w=majority`
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean,
+})
+
+
+const Note = mongoose.model('Note', noteSchema)
+
+mongoose
+    .connect(url)
+    .then(() => {
+        Note.find({}).then(result => {
+            result.forEach(note => {
+                console.log(note)
+            })
+            mongoose.connection.close()
+        })
+    })
+    .catch((err) => logger.error(err))

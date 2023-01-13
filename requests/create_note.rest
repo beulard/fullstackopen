@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJldWxhcmQiLCJpZCI6IjYzYzA2NjJkYTFiMWUwNzE1NjI0ZDYyMCIsImlhdCI6MTY3MzU1MzQ2NX0.oZdNDNIrgzthaPVzmisH93D1KwGagwoifrHmwA7cEUE
+
+{
+    "important":  false,
+    "content": "Can beulard post notes for root?",
+    "userId": "63c059ea403df34e225707f6"
+}
