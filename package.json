@@ -1,0 +1,32 @@
+{
+  "name": "phonebook_backend",
+  "version": "1.0.0",
+  "description": "Learning webdev using the great University of Helsinki  [Full Stack open course](https://fullstackopen.com/).",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.3",
+    "morgan": "^1.10.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beulard/fullstackopen.git"
+  },
+  "author": "beulard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beulard/fullstackopen/issues"
+  },
+  "homepage": "https://github.com/beulard/fullstackopen#readme",
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "nodemon": "^2.0.20"
+  }
+}
