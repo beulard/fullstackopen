@@ -1,7 +1,5 @@
 # fullstackopen
 
-Learning webdev using the great University of Helsinki 
-[Full Stack open course](https://fullstackopen.com/).
+Notes server for storing e.g. a todo list. Backend is a MongoDB database.
 
-This repo is arranged into one branch for each part/exercise of the course.
-Hence why this branch is empty.
+App is deployed [here](https://fullstackopen-part3-backend.fly.dev/).
