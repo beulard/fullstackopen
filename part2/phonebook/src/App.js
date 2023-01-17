@@ -16,8 +16,8 @@ const Persons = ({ persons, handleDeletePerson, setStatusMessage }) =>
 const PersonForm = ({ newName, setNewName, newNumber, setNewNumber, addName }) =>
   <form>
     <div>
-      name: <input value={newName} onChange={(event) => setNewName(event.target.value)} />
-      number: <input value={newNumber} onChange={(event) => setNewNumber(event.target.value)} />
+      <p>name: <input value={newName} onChange={(event) => setNewName(event.target.value)} /></p>
+      <p>number: <input value={newNumber} onChange={(event) => setNewNumber(event.target.value)} /></p>
     </div>
     <div>
       <button onClick={addName} type="submit">add</button>
@@ -50,7 +50,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
-  const [statusMessage, setStatusMessage] = useState('test')
+  const [statusMessage, setStatusMessage] = useState(null)
   const [statusMessageColor, setStatusMessageColor] = useState('green')
   const notificationTimeoutRef = useRef()
 
@@ -126,6 +126,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Notification message={statusMessage} color={statusMessageColor} />
       <SearchFilter searchValue={searchValue} setSearchValue={setSearchValue} />
+      <h3>Add a person</h3>
       <PersonForm
         newName={newName}
         setNewName={setNewName}
@@ -134,7 +135,7 @@ const App = () => {
         addName={addName}
         setStatusMessage={setStatusMessage}
       />
-      <h2>Numbers</h2>
+      <h3>Numbers</h3>
       <Persons persons={personsToShow} handleDeletePerson={handleDeletePerson} setStatusMessage={setStatusMessage} />
       
     </div>
