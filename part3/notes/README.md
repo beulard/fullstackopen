@@ -1,4 +1,4 @@
-# fullstackopen
+# notes
 
 Notes server for storing e.g. a todo list. Backend is a MongoDB database.
 
