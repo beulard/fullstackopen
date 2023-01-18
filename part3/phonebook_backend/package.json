@@ -13,6 +13,10 @@
     "start": "node index.js",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../phonebook_frontend && npm run build && cp -r build ../phonebook_backend",
+    "deploy": "~/.fly/bin/flyctl deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "~/.fly/bin/flyctl logs",
     "lint": "eslint ."
   },
   "repository": {
