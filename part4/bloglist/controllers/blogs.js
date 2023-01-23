@@ -19,6 +19,8 @@ blogsRouter.post('/', async (request, response) => {
 
     // Associate with authenticated user
     blog.user = user.id
+    
+    blog.populate('user', ['username', 'name', 'id'])
 
     // Save the blog
     const result = await blog.save()
@@ -64,7 +66,7 @@ blogsRouter.delete('/:id', async (req, res) => {
 })
 
 blogsRouter.put('/:id', async (req, res) => {
-    const returnedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    const returnedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('user', ['username', 'name', 'id'])
     res.status(200).json(returnedBlog)
 })
 
