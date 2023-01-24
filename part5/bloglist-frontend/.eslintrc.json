@@ -23,8 +23,8 @@
     ],
     "rules": {
         "indent": [
-            "error",
-            2  
+            "warn",
+            4
         ],
         "linebreak-style": [
             "error",
