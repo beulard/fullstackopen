@@ -2,10 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import { AddBlogForm } from './components/AddBlogForm'
-import { LoginForm } from './components/LoginForm'
+import LoginForm from './components/LoginForm'
 import { Notification } from './components/Notification'
 import { BlogList } from './components/Blog'
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([])

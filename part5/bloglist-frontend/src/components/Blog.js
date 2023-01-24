@@ -1,8 +1,7 @@
-import Togglable from "./Togglable"
+import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, modifyBlog, deleteBlog, setErrorMessage, username, logoutUser }) => {
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -29,7 +28,7 @@ const Blog = ({ blog, modifyBlog, deleteBlog, setErrorMessage, username, logoutU
     }
     try {
       const returnedBlog = await blogService.modify(blog.id, newBlog)
-      //setDisplayedBlog(returnedBlog)
+      // setDisplayedBlog(returnedBlog)
       modifyBlog(returnedBlog)
     } catch (error) {
       handleError(error)
@@ -59,7 +58,6 @@ const Blog = ({ blog, modifyBlog, deleteBlog, setErrorMessage, username, logoutU
 }
 
 const BlogList = ({ blogs, setBlogs, setErrorMessage, username, logoutUser }) => {
-
   const modifyBlog = (id, newBlog) => {
     const updatedBlogs = [...blogs]
     setBlogs(updatedBlogs.map(blog => blog.id === id ? newBlog : blog))
