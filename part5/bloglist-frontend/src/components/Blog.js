@@ -1,4 +1,4 @@
-import Togglable from './Togglable'
+import { Togglable } from './Togglable'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, modifyBlog, deleteBlog, setErrorMessage, username, logoutUser }) => {
@@ -46,11 +46,11 @@ const Blog = ({ blog, modifyBlog, deleteBlog, setErrorMessage, username, logoutU
         }
     }
 
-    return <div style={blogStyle}>
+    return <div className='blog' style={blogStyle}>
         {blog.title} by {blog.author}
         <Togglable buttonLabel='show' hideLabel='hide'>
-            <div>{blog.url}</div>
-            <div>{blog.likes} likes <button onClick={() => { handleLike(blog) }}>like</button></div>
+            <div className='blogUrl'>{blog.url}</div>
+            <div className='likesCount'>{blog.likes} likes <button onClick={() => { handleLike(blog) }}>like</button></div>
             <div>Added by {blog.user.name}</div>
             {username === blog.user.username && <div><button onClick={() => { handleDelete(blog) }}>remove</button></div>}
         </Togglable>
@@ -79,4 +79,4 @@ const BlogList = ({ blogs, setBlogs, setErrorMessage, username, logoutUser }) =>
     )
 }
 
-export { BlogList }
+export { Blog, BlogList }
