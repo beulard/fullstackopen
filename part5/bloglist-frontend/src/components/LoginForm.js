@@ -27,9 +27,9 @@ const LoginForm = ({ setUser, setErrorMessage }) => {
         <div>
             <h2>log in to application</h2>
             <form onSubmit={onSubmitLogin}>
-                <div>username <input name='Username' type='text' onChange={({ target }) => setUsername(target.value)} /></div>
-                <div>password <input name='Password' type='password' onChange={({ target }) => setPassword(target.value)} /></div>
-                <button type='submit'>log in</button>
+                <div>username <input name='Username' id='username' type='text' value={username} onChange={({ target }) => setUsername(target.value)} /></div>
+                <div>password <input name='Password' id='password' type='password' value={password} onChange={({ target }) => setPassword(target.value)} /></div>
+                <button type='submit' id='login-button'>log in</button>
             </form>
         </div>
     )

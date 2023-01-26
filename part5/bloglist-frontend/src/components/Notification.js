@@ -7,7 +7,7 @@ export const Notification = ({ message }) => {
     }
     if (message.length > 0) {
         return (
-            <div style={style}>{message}</div>
+            <div id='notificationBox' style={style}>{message}</div>
         )
     }
 }

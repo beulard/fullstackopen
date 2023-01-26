@@ -25,9 +25,9 @@ const AddBlogForm = ({ addBlog, setErrorMessage, logoutUser }) => {
 
     return <div>
         <form onSubmit={handleAddBlog}>
-            <div>title <input type='text' placeholder='title' onChange={({ target }) => setTitle(target.value)} /></div>
-            <div>author <input type='text' placeholder='author' onChange={({ target }) => setAuthor(target.value)} /></div>
-            <div>url <input type='url' placeholder='url' value={blogUrl} onChange={({ target }) => setUrl(target.value)} /></div>
+            <div>title <input type='text' placeholder='title' id='titleBox' value={blogTitle} onChange={({ target }) => setTitle(target.value)} /></div>
+            <div>author <input type='text' placeholder='author' id='authorBox' value={blogAuthor} onChange={({ target }) => setAuthor(target.value)} /></div>
+            <div>url <input type='url' placeholder='url' id='urlBox' value={blogUrl} onChange={({ target }) => setUrl(target.value)} /></div>
             <button type='submit'>submit</button>
         </form>
     </div>

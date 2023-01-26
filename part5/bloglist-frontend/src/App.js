@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import Togglable from './components/Togglable'
+import { Togglable } from './components/Togglable'
 import blogService from './services/blogs'
 import { AddBlogForm } from './components/AddBlogForm'
 import LoginForm from './components/LoginForm'
@@ -55,7 +55,7 @@ const App = () => {
             ? <LoginForm setUser={setUser} setErrorMessage={updateErrorMessage} />
             : <>
                 <h2>add blog</h2>
-                <Togglable buttonLabel='add blog' ref={addBlogRef}>
+                <Togglable id='addBlogShowTogglable' buttonLabel='add blog' ref={addBlogRef}>
                     <AddBlogForm addBlog={
                         (blog) => {
                             setBlogs([...blogs, blog])

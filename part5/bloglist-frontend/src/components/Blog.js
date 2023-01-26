@@ -68,7 +68,7 @@ const BlogList = ({ blogs, setBlogs, setErrorMessage, username, logoutUser }) =>
     }
 
     return (
-        <div>
+        <div id='blogList'>
             <h2>blogs</h2>
             {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
                 <Blog key={blog.id} blog={blog} modifyBlog={(newBlog) => modifyBlog(blog.id, newBlog)}
